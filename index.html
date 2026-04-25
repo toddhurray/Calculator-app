@@ -46,15 +46,20 @@
             background: #0a0a0a;
             color: #888;
             text-align: right;
-            padding: 5px 15px;
-            font-size: 14px;
-            min-height: 20px;
+            padding: 8px 15px;
+            font-size: 12px;
+            min-height: 80px;
+            max-height: 80px;
+            overflow-y: auto;
             border-radius: 10px 10px 0 0;
-            word-wrap: break-word;
+            line-height: 1.4;
+        }
+        .history div {
+            margin: 2px 0;
         }
         #display {
             width: 100%;
-            height: 80px;
+            height: 70px;
             background: #0a0a0a;
             color: white;
             text-align: right;
@@ -131,12 +136,22 @@
         let display = document.getElementById('display');
         let history = document.getElementById('history');
         let currentInput = '';
+        let historyLines = [];
 
         window.onload = function() {
-            const savedHistory = localStorage.getItem('calcHistory');
+            const savedHistory = localStorage.getItem('calcHistoryArray');
             if (savedHistory) {
-                history.textContent = savedHistory;
+                historyLines = JSON.parse(savedHistory);
+                updateHistoryDisplay();
             }
+        }
+
+        function updateHistoryDisplay() {
+            history.innerHTML = '';
+            historyLines.slice(-5).forEach(line => {
+                history.innerHTML += `<div>${line}</div>`;
+            });
+            history.scrollTop = history.scrollHeight;
         }
 
         function appendToDisplay(value) {
@@ -160,8 +175,13 @@
                 let result = eval(expression);
                 
                 if (result !== undefined) {
-                    history.textContent = currentInput + ' =';
-                    localStorage.setItem('calcHistory', history.textContent);
+                    let historyEntry = `${currentInput} = ${result}`;
+                    historyLines.push(historyEntry);
+                    if (historyLines.length > 5) historyLines.shift();
+                    
+                    localStorage.setItem('calcHistoryArray', JSON.stringify(historyLines));
+                    updateHistoryDisplay();
+                    
                     display.value = result;
                     currentInput = result.toString();
                 }
@@ -172,8 +192,9 @@
         }
 
         function clearHistory() {
-            history.textContent = '';
-            localStorage.removeItem('calcHistory');
+            historyLines = [];
+            history.innerHTML = '';
+            localStorage.removeItem('calcHistoryArray');
         }
     </script>
 </body>
