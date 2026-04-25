@@ -1,224 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
-<head><link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#ff9500">
-<script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js');
-  }
-</script>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculator App</title>
+    <title>Calculator</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', sans-serif;
         }
-        
+
         body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            background: #1a1a1a;
+            padding: 20px;
         }
-        
+
         .calculator {
-            background: #2d2d2d;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-            width: 320px;
+            background: #2d3748;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 350px;
         }
-        
-        #.display {
-            background: #1a1a1a;
-            color: white;
-            font-size: 2.5rem;
-            padding: 20px;
+
+        #history {
+            color: #a0aec0;
+            font-size: 14px;
+            min-height: 0;
             text-align: right;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            min-height: 80px;
+            margin-bottom: 8px;
+            padding: 0 10px;
             word-wrap: break-word;
         }
-        
+
+        #clear-btn {
+            display: block;
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 12px;
+            background: #e53e3e;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        #clear-btn:hover {
+            background: #c53030;
+        }
+
+        #display {
+            width: 100%;
+            height: 70px;
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 32px;
+            text-align: right;
+            padding: 0 20px;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
         .buttons {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 12px;
         }
-        
+
         button {
-            padding: 20px;
-            font-size: 1.2rem;
-            font-weight: 600;
+            height: 65px;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
+            font-size: 22px;
+            font-weight: 500;
             cursor: pointer;
-            transition: opacity 0.2s;
+            transition: all 0.2s;
         }
-        
+
         button:active {
-            opacity: 0.7;
+            transform: scale(0.95);
         }
-        
+
         .btn-number {
-            background: #505050;
+            background: #4a5568;
             color: white;
         }
-        
+
+        .btn-number:hover {
+            background: #5a6578;
+        }
+
         .btn-operator {
-            background: #ff9500;
+            background: #ed8936;
             color: white;
         }
-        
-        .btn-clear {
-            background: #a5a5a5;
-            color: black;
+
+        .btn-operator:hover {
+            background: #dd7926;
         }
-        
+
+        .btn-clear {
+            background: #e53e3e;
+            color: white;
+        }
+
+        .btn-clear:hover {
+            background: #c53030;
+        }
+
         .btn-equals {
-            background: #ff9500;
+            background: #48bb78;
             color: white;
             grid-column: span 2;
         }
-        
+
+        .btn-equals:hover {
+            background: #38a368;
+        }
+
         .btn-zero {
             grid-column: span 2;
         }
     </style>
-  #clear-btn {
-  background: #ff3b30;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
-  margin: 10px auto;
-  display: block;
-  cursor: pointer;
-  font-size: 14px;
-}
-#clear-btn:hover {
-  background: #d70015;
-}
-  #history {
-  min-height: 0px;
-  font-size: 14px;
-  color: #888;
-  text-align: right;
-  padding: 10px;
-  overflow-y: auto;
-}
-#history div { margin-bottom: 4px; }
 </head>
 <body>
     <div class="calculator">
-    <div id="history"></div>
-        <button id="clear-btn" onclick="clearHistory()">Clear History</button> 
+        <div id="history"></div>
+        <button id="clear-btn" onclick="clearHistory()">Clear History</button>
+        <input type="text" id="display" disabled>
+        <div class="buttons">
             <button class="btn-clear" onclick="clearDisplay()">C</button>
-            <button class="btn-clear" onclick="deleteLast()">DEL</button>
-            <button class="btn-operator" onclick="appendOperator('/')">/</button>
-            <button class="btn-operator" onclick="appendOperator('*')">×</button>
+            <button class="btn-operator" onclick="appendToDisplay('/')">/</button>
+            <button class="btn-operator" onclick="appendToDisplay('*')">×</button>
+            <button class="btn-operator" onclick="deleteLast()">⌫</button>
             
-            <button class="btn-number" onclick="appendNumber('7')">7</button>
-            <button class="btn-number" onclick="appendNumber('8')">8</button>
-            <button class="btn-number" onclick="appendNumber('9')">9</button>
-            <button class="btn-operator" onclick="appendOperator('-')">-</button>
-            
-            <button class="btn-number" onclick="appendNumber('4')">4</button>
-            <button class="btn-number" onclick="appendNumber('5')">5</button>
-            <button class="btn-number" onclick="appendNumber('6')">6</button>
-            <button class="btn-operator" onclick="appendOperator('+')">+</button>
-            
-            <button class="btn-number" onclick="appendNumber('1')">1</button>
-            <button class="btn-number" onclick="appendNumber('2')">2</button>
-            <button class="btn-number" onclick="appendNumber('3')">3</button>
-            <button class="btn-equals" onclick="calculate()">=</button>
-            
-            <button class="btn-number btn-zero" onclick="appendNumber('0')">0</button>
-            <button class="btn-number" onclick="appendDecimal()">.</button>
-        </div>
-    </div>
-
-    <script>
-      let historyArray = [];
-function addToHistory(calc, result) {
-  historyArray.unshift(`${calc} = ${result}`);
-  if (historyArray.length > 5) historyArray.pop();
-  document.getElementById('history').innerHTML = historyArray.map(item => `<div>${item}</div>`).join('');
-}
-
-function clearHistory() {
-  historyArray = [];
-  document.getElementById('history').innerHTML = '';
-}
-        let display = document.getElementById('display');
-        let currentInput = '0';
-        let shouldResetDisplay = false;
-
-        function updateDisplay() {
-            display.textContent = currentInput;
-        function appendNumber(num) {
-            if (currentInput === '0' || shouldResetDisplay) {
-                currentInput = num;
-                shouldResetDisplay = false;
-            } else {
-                currentInput += num;
-            }
-            updateDisplay();
-        }
-
-        function appendOperator(op) {
-            if (shouldResetDisplay) shouldResetDisplay = false;
-            currentInput += ' ' + op + ' ';
-            updateDisplay();
-        }
-
-        function appendDecimal() {
-            if (shouldResetDisplay) {
-                currentInput = '0.';
-                shouldResetDisplay = false;
-            } else if (!currentInput.split(' ').pop().includes('.')) {
-                currentInput += '.';
-            }
-            updateDisplay();
-        }
-
-        function clearDisplay() {
-            currentInput = '0';
-            updateDisplay();
-        }
-
-        function deleteLast() {
-            if (currentInput.length === 1 || currentInput === 'Error') {
-                currentInput = '0';
-            } else {
-                currentInput = currentInput.slice(0, -1);
-                if (currentInput.endsWith(' ')) {
-                    currentInput = currentInput.slice(0, -2);
-                }
-            }
-            updateDisplay();
-        }
-
-        function calculate() {
-            try {
-                let result = eval(currentInput.replace(/×/g, '*'));
-                    addToHistory(currentInput, result);
-                currentInput = parseFloat(result.toFixed(8)).toString();
-                shouldResetDisplay = true;
-            } catch (e) {
-                currentInput = 'Error';
-                shouldResetDisplay = true;
-            }
-            updateDisplay();
-          <div id="history"></div>
-<button id="clear-btn" onclick="clearHistory()">Clear History</button>
-        }
-    </script>
-</body>
-</html>
+            <button class="btn-number" onclick="appendToDisplay('7')">7</button>
+            <button class="btn-number" onclick="appendToDisplay('8')">8</button
