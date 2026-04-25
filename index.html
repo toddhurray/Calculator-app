@@ -146,4 +146,54 @@
             <button class="btn-operator" onclick="deleteLast()">⌫</button>
             
             <button class="btn-number" onclick="appendToDisplay('7')">7</button>
-            <button class="btn-number" onclick="appendToDisplay('8')">8</button
+            <button class="btn-number" onclick="appendToDisplay('8')">8</button                                                              
+<script>
+    let display = document.getElementById('display');
+    let history = document.getElementById('history');
+    let currentInput = '';
+
+    // Load history when page opens
+    window.onload = function() {
+        const savedHistory = localStorage.getItem('calcHistory');
+        if (savedHistory) {
+            history.textContent = savedHistory;
+        }
+    }
+
+    function appendToDisplay(value) {
+        currentInput += value;
+        display.value = currentInput;
+    }
+
+    function clearDisplay() {
+        currentInput = '';
+        display.value = '';
+    }
+
+    function deleteLast() {
+        currentInput = currentInput.slice(0, -1);
+        display.value = currentInput;
+    }
+
+    function calculate() {
+        try {
+            let expression = currentInput.replace(/×/g, '*');
+            let result = eval(expression);
+            
+            if (result !== undefined) {
+                history.textContent = currentInput + ' =';
+                localStorage.setItem('calcHistory', history.textContent); // Save it
+                display.value = result;
+                currentInput = result.toString();
+            }
+        } catch (error) {
+            display.value = 'Error';
+            currentInput = '';
+        }
+    }
+
+    function clearHistory() {
+        history.textContent = '';
+        localStorage.removeItem('calcHistory'); // Delete saved history
+    }
+</script>
