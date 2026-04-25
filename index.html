@@ -10,190 +10,171 @@
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: #2c3e50;
             display: flex;
             justify-content: center;
             align-items: center;
+            min-height: 100vh;
             padding: 20px;
         }
-
         .calculator {
-            background: #2d3748;
+            background: #1e272e;
             border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 20px;
             width: 100%;
-            max-width: 350px;
+            max-width: 320px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
-
-        #history {
-            color: #a0aec0;
-            font-size: 14px;
-            min-height: 0;
-            text-align: right;
-            margin-bottom: 8px;
-            padding: 0 10px;
-            word-wrap: break-word;
-        }
-
-        #clear-btn {
-            display: block;
+        .clear-btn {
             width: 100%;
-            padding: 8px;
-            margin-bottom: 12px;
-            background: #e53e3e;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        #clear-btn:hover {
-            background: #c53030;
-        }
-
-        #display {
-            width: 100%;
-            height: 70px;
-            background: #1a1a1a;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: #e74c3c;
             color: white;
             border: none;
             border-radius: 10px;
-            font-size: 32px;
-            text-align: right;
-            padding: 0 20px;
-            margin-bottom: 20px;
-            font-weight: 300;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
         }
-
+        .clear-btn:active {
+            background: #c0392b;
+        }
+        .history {
+            background: #0a0a0a;
+            color: #888;
+            text-align: right;
+            padding: 5px 15px;
+            font-size: 14px;
+            min-height: 20px;
+            border-radius: 10px 10px 0 0;
+            word-wrap: break-word;
+        }
+        #display {
+            width: 100%;
+            height: 80px;
+            background: #0a0a0a;
+            color: white;
+            text-align: right;
+            padding: 15px;
+            font-size: 32px;
+            border: none;
+            border-radius: 0 0 10px 10px;
+            margin-bottom: 15px;
+        }
         .buttons {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
+            gap: 10px;
         }
-
         button {
-            height: 65px;
+            padding: 20px;
+            font-size: 20px;
             border: none;
-            border-radius: 12px;
-            font-size: 22px;
-            font-weight: 500;
+            border-radius: 10px;
             cursor: pointer;
-            transition: all 0.2s;
+            font-weight: bold;
+            background: #34495e;
+            color: white;
         }
-
         button:active {
-            transform: scale(0.95);
+            opacity: 0.7;
         }
-
-        .btn-number {
-            background: #4a5568;
-            color: white;
+        .operator {
+            background: #f39c12;
         }
-
-        .btn-number:hover {
-            background: #5a6578;
+        .equals {
+            background: #27ae60;
         }
-
-        .btn-operator {
-            background: #ed8936;
-            color: white;
+        .clear {
+            background: #e74c3c;
         }
-
-        .btn-operator:hover {
-            background: #dd7926;
-        }
-
-        .btn-clear {
-            background: #e53e3e;
-            color: white;
-        }
-
-        .btn-clear:hover {
-            background: #c53030;
-        }
-
-        .btn-equals {
-            background: #48bb78;
-            color: white;
-            grid-column: span 2;
-        }
-
-        .btn-equals:hover {
-            background: #38a368;
-        }
-
-        .btn-zero {
+        .zero {
             grid-column: span 2;
         }
     </style>
 </head>
 <body>
     <div class="calculator">
-        <div id="history"></div>
-        <button id="clear-btn" onclick="clearHistory()">Clear History</button>
-        <input type="text" id="display" disabled>
+        <button class="clear-btn" onclick="clearHistory()">Clear History</button>
+        <div class="history" id="history"></div>
+        <input type="text" id="display" readonly>
         <div class="buttons">
-            <button class="btn-clear" onclick="clearDisplay()">C</button>
-            <button class="btn-operator" onclick="appendToDisplay('/')">/</button>
-            <button class="btn-operator" onclick="appendToDisplay('*')">×</button>
-            <button class="btn-operator" onclick="deleteLast()">⌫</button>
+            <button class="clear" onclick="clearDisplay()">C</button>
+            <button class="operator" onclick="appendToDisplay('/')">/</button>
+            <button class="operator" onclick="appendToDisplay('*')">×</button>
+            <button class="operator" onclick="deleteLast()">⌫</button>
             
-            <button class="btn-number" onclick="appendToDisplay('7')">7</button>
-            <button class="btn-number" onclick="appendToDisplay('8')">8</button                                                              
-<script>
-    let display = document.getElementById('display');
-    let history = document.getElementById('history');
-    let currentInput = '';
-
-    // Load history when page opens
-    window.onload = function() {
-        const savedHistory = localStorage.getItem('calcHistory');
-        if (savedHistory) {
-            history.textContent = savedHistory;
-        }
-    }
-
-    function appendToDisplay(value) {
-        currentInput += value;
-        display.value = currentInput;
-    }
-
-    function clearDisplay() {
-        currentInput = '';
-        display.value = '';
-    }
-
-    function deleteLast() {
-        currentInput = currentInput.slice(0, -1);
-        display.value = currentInput;
-    }
-
-    function calculate() {
-        try {
-            let expression = currentInput.replace(/×/g, '*');
-            let result = eval(expression);
+            <button onclick="appendToDisplay('7')">7</button>
+            <button onclick="appendToDisplay('8')">8</button>
+            <button onclick="appendToDisplay('9')">9</button>
+            <button class="operator" onclick="appendToDisplay('-')">-</button>
             
-            if (result !== undefined) {
-                history.textContent = currentInput + ' =';
-                localStorage.setItem('calcHistory', history.textContent); // Save it
-                display.value = result;
-                currentInput = result.toString();
+            <button onclick="appendToDisplay('4')">4</button>
+            <button onclick="appendToDisplay('5')">5</button>
+            <button onclick="appendToDisplay('6')">6</button>
+            <button class="operator" onclick="appendToDisplay('+')">+</button>
+            
+            <button onclick="appendToDisplay('1')">1</button>
+            <button onclick="appendToDisplay('2')">2</button>
+            <button onclick="appendToDisplay('3')">3</button>
+            <button class="equals" onclick="calculate()">=</button>
+            
+            <button class="zero" onclick="appendToDisplay('0')">0</button>
+            <button onclick="appendToDisplay('.')">.</button>
+        </div>
+    </div>
+
+    <script>
+        let display = document.getElementById('display');
+        let history = document.getElementById('history');
+        let currentInput = '';
+
+        window.onload = function() {
+            const savedHistory = localStorage.getItem('calcHistory');
+            if (savedHistory) {
+                history.textContent = savedHistory;
             }
-        } catch (error) {
-            display.value = 'Error';
-            currentInput = '';
         }
-    }
 
-    function clearHistory() {
-        history.textContent = '';
-        localStorage.removeItem('calcHistory'); // Delete saved history
-    }
-</script>
+        function appendToDisplay(value) {
+            currentInput += value;
+            display.value = currentInput;
+        }
+
+        function clearDisplay() {
+            currentInput = '';
+            display.value = '';
+        }
+
+        function deleteLast() {
+            currentInput = currentInput.slice(0, -1);
+            display.value = currentInput;
+        }
+
+        function calculate() {
+            try {
+                let expression = currentInput.replace(/×/g, '*');
+                let result = eval(expression);
+                
+                if (result !== undefined) {
+                    history.textContent = currentInput + ' =';
+                    localStorage.setItem('calcHistory', history.textContent);
+                    display.value = result;
+                    currentInput = result.toString();
+                }
+            } catch (error) {
+                display.value = 'Error';
+                currentInput = '';
+            }
+        }
+
+        function clearHistory() {
+            history.textContent = '';
+            localStorage.removeItem('calcHistory');
+        }
+    </script>
+</body>
+</html>
