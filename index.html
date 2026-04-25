@@ -91,10 +91,35 @@
             grid-column: span 2;
         }
     </style>
+  #clear-btn {
+  background: #ff3b30;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  margin: 10px auto;
+  display: block;
+  cursor: pointer;
+  font-size: 14px;
+}
+#clear-btn:hover {
+  background: #d70015;
+}
+  #history {
+  min-height: 80px;
+  font-size: 14px;
+  color: #888;
+  text-align: right;
+  padding: 10px;
+  overflow-y: auto;
+}
+#history div { margin-bottom: 4px; }
 </head>
 <body>
     <div class="calculator">
-        <div class="display" id="display">0</div>
+    <div id="history"></div>
+<button id="clear-btn" onclick="clearHistory()">Clear History</button>
+<button id="clear-btn" onclick="clearHistory()">Clear History</button>
         <div class="buttons">
             <button class="btn-clear" onclick="clearDisplay()">C</button>
             <button class="btn-clear" onclick="deleteLast()">DEL</button>
@@ -122,14 +147,23 @@
     </div>
 
     <script>
+      let historyArray = [];
+function addToHistory(calc, result) {
+  historyArray.unshift(`${calc} = ${result}`);
+  if (historyArray.length > 5) historyArray.pop();
+  document.getElementById('history').innerHTML = historyArray.map(item => `<div>${item}</div>`).join('');
+}
+
+function clearHistory() {
+  historyArray = [];
+  document.getElementById('history').innerHTML = '';
+}
         let display = document.getElementById('display');
         let currentInput = '0';
         let shouldResetDisplay = false;
 
         function updateDisplay() {
             display.textContent = currentInput;
-        }
-
         function appendNumber(num) {
             if (currentInput === '0' || shouldResetDisplay) {
                 currentInput = num;
@@ -176,6 +210,7 @@
         function calculate() {
             try {
                 let result = eval(currentInput.replace(/×/g, '*'));
+                    addToHistory(currentInput, result);
                 currentInput = parseFloat(result.toFixed(8)).toString();
                 shouldResetDisplay = true;
             } catch (e) {
