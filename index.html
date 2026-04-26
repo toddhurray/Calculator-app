@@ -187,20 +187,25 @@
             });
             history.scrollTop = history.scrollHeight;
         }
+            function appendToDisplay(value) {
+  if (currentInput === '0' && value !== '.') {
+    currentInput = value;
+  } else {
+    currentInput += value;
+  }
+  document.getElementById('display').textContent = currentInput;
+}
 
-        function appendToDisplay(value) {
-            currentInput += value;
-            display.value = currentInput;
-        }
+function clearDisplay() {
+  currentInput = '0';
+  document.getElementById('display').textContent = '0';
+}
 
-        function clearDisplay() {
-            currentInput = '';
-            display.value = '';
-        }
-
-        function deleteLast() {
-            currentInput = currentInput.slice(0, -1);
-            display.value = currentInput;
+function deleteLast() {
+  currentInput = currentInput.slice(0, -1);
+  if (currentInput === '') currentInput = '0';
+  document.getElementById('display').textContent = currentInput;
+}
         }
 
         function calculate() {
