@@ -1,239 +1,245 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculator</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: Arial, sans-serif;
-            background: #2c3e50;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .calculator {
-            background: #1e272e;
-            border-radius: 20px;
-            padding: 20px;
-            width: 100%;
-            max-width: 320px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-        .clear-btn {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            background: #e74c3c;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .clear-btn:active {
-            background: #c0392b;
-        }
-        .history {
-            background: #0a0a0a;
-            color: #888;
-            text-align: right;
-            padding: 8px 15px;
-            font-size: 12px;
-            min-height: 80px;
-            max-height: 80px;
-            overflow-y: auto;
-            border-radius: 10px 10px 0 0;
-            line-height: 1.4;
-        }
-        .history div {
-            margin: 2px 0;
-        }
-        #display {
-            width: 100%;
-            height: 70px;
-            background: #0a0a0a;
-            color: white;
-            text-align: right;
-            padding: 15px;
-            font-size: 32px;
-            border: none;
-            border-radius: 0 0 10px 10px;
-            margin-bottom: 15px;
-        }
-        .buttons {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-        }
-        button {
-            padding: 20px;
-            font-size: 20px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: bold;
-            background: #34495e;
-            color: white;
-        }
-        button:active {
-            opacity: 0.7;
-        }
-        .operator {
-            background: #f39c12;
-        }
-        .equals {
-            background: #27ae60;
-        }
-        .clear {
-            background: #e74c3c;
-        }
-        .zero {
-            grid-column: span 2;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculator</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1a1a1a">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #1a1a1a;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .calculator {
+      background: #2d2d2d;
+      border-radius: 20px;
+      padding: 20px;
+      width: 100%;
+      max-width: 350px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+    
+    .display {
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: right;
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      min-height: 70px;
+      word-wrap: break-word;
+      overflow: hidden;
+    }
+    
+    .history {
+      background: #1a1a1a;
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      min-height: 60px;
+      max-height: 100px;
+      overflow-y: auto;
+      font-size: 0.9em;
+      color: #888;
+    }
+    
+    .history-item {
+      padding: 5px 0;
+      border-bottom: 1px solid #333;
+    }
+    
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    
+    button {
+      padding: 20px;
+      font-size: 1.2em;
+      border: none;
+      border-radius: 10px;
+      background: #3d3d3d;
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    button:active {
+      transform: scale(0.95);
+      background: #4d4d4d;
+    }
+    
+    button.operator {
+      background: #ff9500;
+    }
+    
+    button.operator:active {
+      background: #ffaa33;
+    }
+    
+    button.clear {
+      background: #a6a6a6;
+      color: black;
+    }
+    
+    button.equals {
+      background: #ff9500;
+      grid-column: span 2;
+    }
+    
+    .clear-history {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      background: #ff3b30;
+    }
+  </style>
 </head>
 <body>
-    <div class="calculator">
-        <button class="clear-btn" onclick="clearHistory()">Clear History</button>
-        <div class="history" id="history"></div>
-        <input type="text" id="display" readonly>
-        <div class="buttons">
-            <button class="clear" onclick="clearDisplay()">C</button>
-            <button class="btn" onclick="toggleSign()">+/-</button>
-            <button class="operator" onclick="appendToDisplay('/')">/</button>
-            <button class="operator" onclick="appendToDisplay('*')">×</button>
-            <button class="operator" onclick="deleteLast()">⌫</button>
-            
-            <button onclick="appendToDisplay('7')">7</button>
-            <button onclick="appendToDisplay('8')">8</button>
-            <button onclick="appendToDisplay('9')">9</button>
-            <button class="operator" onclick="appendToDisplay('-')">-</button>
-            
-            <button onclick="appendToDisplay('4')">4</button>
-            <button onclick="appendToDisplay('5')">5</button>
-            <button onclick="appendToDisplay('6')">6</button>
-            <button class="operator" onclick="appendToDisplay('+')">+</button>
-            
-            <button onclick="appendToDisplay('1')">1</button>
-            <button onclick="appendToDisplay('2')">2</button>
-            <button onclick="appendToDisplay('3')">3</button>
-            <button class="equals" onclick="calculate()">=</button>
-            
-            <button class="zero" onclick="appendToDisplay('0')">0</button>
-            <button onclick="appendToDisplay('.')">.</button>
-        </div>
+  <div class="calculator">
+    <div class="display" id="display">0</div>
+    <div class="history" id="history"></div>
+    <div class="buttons">
+      <button class="clear" onclick="clearDisplay()">C</button>
+      <button class="clear" onclick="deleteLast()">⌫</button>
+      <button class="clear" onclick="toggleSign()">+/-</button>
+      <button class="operator" onclick="appendToDisplay('/')">/</button>
+      
+      <button onclick="appendToDisplay('7')">7</button>
+      <button onclick="appendToDisplay('8')">8</button>
+      <button onclick="appendToDisplay('9')">9</button>
+      <button class="operator" onclick="appendToDisplay('*')">×</button>
+      
+      <button onclick="appendToDisplay('4')">4</button>
+      <button onclick="appendToDisplay('5')">5</button>
+      <button onclick="appendToDisplay('6')">6</button>
+      <button class="operator" onclick="appendToDisplay('-')">-</button>
+      
+      <button onclick="appendToDisplay('1')">1</button>
+      <button onclick="appendToDisplay('2')">2</button>
+      <button onclick="appendToDisplay('3')">3</button>
+      <button class="operator" onclick="appendToDisplay('+')">+</button>
+      
+      <button onclick="appendToDisplay('0')">0</button>
+      <button onclick="appendToDisplay('.')">.</button>
+      <button class="equals" onclick="calculate()">=</button>
     </div>
+    <button class="clear-history" onclick="clearHistory()">Clear History</button>
+  </div>
 
-    <script>
-        function toggleSign() {
-  if (currentInput === '' || currentInput === '0') return;
-  
-  if (currentInput.startsWith('-')) {
-    currentInput = currentInput.slice(1);
-  } else {
-    currentInput = '-' + currentInput;
-  }
-  updateDisplay();
-}
-        let display = document.getElementById('display');
-        let history = document.getElementById('history');
-        let currentInput = '';
-        let historyLines = [];
+  <script>
+    let currentInput = '0';
+    let historyLines = [];
+    let history;
 
-        window.onload = function() {
-            const savedHistory = localStorage.getItem('calcHistoryArray');
-            if (savedHistory) {
-                historyLines = JSON.parse(savedHistory);
-                updateHistoryDisplay();
-            }
-        }
-
-        // KEYBOARD SUPPORT - NEW CODE
-        document.addEventListener('keydown', function(event) {
-            const key = event.key;
-            
-            if (key >= '0' && key <= '9' || key === '.') {
-                appendToDisplay(key);
-            } else if (key === '+' || key === '-') {
-                appendToDisplay(key);
-            } else if (key === '*') {
-                appendToDisplay('*');
-            } else if (key === '/') {
-                event.preventDefault();
-                appendToDisplay('/');
-            } else if (key === 'Enter' || key === '=') {
-                event.preventDefault();
-                calculate();
-            } else if (key === 'Escape' || key === 'c' || key === 'C') {
-                clearDisplay();
-            } else if (key === 'Backspace') {
-                deleteLast();
-            }
-        });
-
-        function updateHistoryDisplay() {
-            history.innerHTML = '';
-            historyLines.slice(-5).forEach(line => {
-                history.innerHTML += `<div>${line}</div>`;
-            });
-            history.scrollTop = history.scrollHeight;
-        }
-            function appendToDisplay(value) {
-  if (currentInput === '0' && value !== '.') {
-    currentInput = value;
-  } else {
-    currentInput += value;
-  }
-  document.getElementById('display').textContent = currentInput;
-}
-
-function clearDisplay() {
-  currentInput = '0';
-  document.getElementById('display').textContent = '0';
-}
-
-function deleteLast() {
-  currentInput = currentInput.slice(0, -1);
-  if (currentInput === '') currentInput = '0';
-  document.getElementById('display').textContent = currentInput;
-}
-        }
-
-        function calculate() {
-            try {
-                let expression = currentInput.replace(/×/g, '*');
-                let result = eval(expression);
-                
-                if (result !== undefined) {
-                    let historyEntry = `${currentInput} = ${result}`;
-                    historyLines.push(historyEntry);
-                    if (historyLines.length > 5) {
-  historyLines.shift();
-}                 localStorage.setItem('calcHistoryArray', JSON.stringify(historyLines));
-                    updateHistoryDisplay();         
-document.getElementById('display').textContent = result;
-currentInput = result.toString();
+    window.onload = function() {
+      history = document.getElementById('history');
+      
+      const savedHistory = localStorage.getItem('calcHistory');
+      if (savedHistory) {
+        historyLines = JSON.parse(savedHistory);
+      }
+      
+      document.getElementById('display').textContent = '0';
+      updateHistoryDisplay();
+      
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('service-worker.js');
+      }
     }
-  } catch (error) {
-    document.getElementById('display').textContent = 'Error';
-    currentInput = '';
-  }            }
-        }
 
-        function clearHistory() {
-            historyLines = [];
-            history.innerHTML = '';
-            localStorage.removeItem('calcHistoryArray');
-        }
-    </script>
+    function appendToDisplay(value) {
+      if (currentInput === '0' && value !== '.') {
+        currentInput = value;
+      } else {
+        currentInput += value;
+      }
+      document.getElementById('display').textContent = currentInput;
+    }
+
+    function clearDisplay() {
+      currentInput = '0';
+      document.getElementById('display').textContent = '0';
+    }
+
+    function deleteLast() {
+      currentInput = currentInput.slice(0, -1);
+      if (currentInput === '') currentInput = '0';
+      document.getElementById('display').textContent = currentInput;
+    }
+
+    function toggleSign() {
+      if (currentInput === '0') return;
+      if (currentInput.startsWith('-')) {
+        currentInput = currentInput.slice(1);
+      } else {
+        currentInput = '-' + currentInput;
+      }
+      document.getElementById('display').textContent = currentInput;
+    }
+
+    function calculate() {
+      try {
+        const result = eval(currentInput);
+        const calculation = currentInput + ' = ' + result;
+        
+        historyLines.push(calculation);
+        localStorage.setItem('calcHistory', JSON.stringify(historyLines));
+        updateHistoryDisplay();
+        
+        currentInput = result.toString();
+        document.getElementById('display').textContent = currentInput;
+      } catch (error) {
+        document.getElementById('display').textContent = 'Error';
+        currentInput = '0';
+      }
+    }
+
+    function updateHistoryDisplay() {
+      history.innerHTML = '';
+      historyLines.slice(-5).forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'history-item';
+        div.textContent = item;
+        history.appendChild(div);
+      });
+    }
+
+    function clearHistory() {
+      historyLines = [];
+      localStorage.removeItem('calcHistory');
+      updateHistoryDisplay();
+    }
+
+    // Keyboard support
+    document.addEventListener('keydown', function(event) {
+      if (event.key >= '0' && event.key <= '9' || event.key === '.') {
+        appendToDisplay(event.key);
+      } else if (event.key === '+' || event.key === '-' || event.key === '*' || event.key === '/') {
+        appendToDisplay(event.key);
+      } else if (event.key === 'Enter' || event.key === '=') {
+        calculate();
+      } else if (event.key === 'Escape') {
+        clearDisplay();
+      } else if (event.key === 'Backspace') {
+        deleteLast();
+      }
+    });
+  </script>
 </body>
 </html>
