@@ -1,8 +1,8 @@
-const CACHE_NAME = 'calc-v1';
+const CACHE_NAME = 'calculator-v2'; // Changed version number
+
 const urlsToCache = [
-  './',
-  './index.html',
-  './manifest.json'
+  '/Calculator-app/',
+  '/Calculator-app/index.html'
 ];
 
 self.addEventListener('install', event => {
@@ -10,11 +10,25 @@ self.addEventListener('install', event => {
     caches.open(CACHE_NAME)
       .then(cache => cache.addAll(urlsToCache))
   );
+  self.skipWaiting(); // Force update
+});
+
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          if (cacheName !== CACHE_NAME) {
+            return caches.delete(cacheName); // Delete old caches
+          }
+        })
+      );
+    })
+  );
 });
 
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request)
-      .then(response => response || fetch(event.request))
+    fetch(event.request).catch(() => caches.match(event.request))
   );
 });
