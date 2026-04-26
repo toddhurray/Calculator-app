@@ -108,6 +108,7 @@
         <input type="text" id="display" readonly>
         <div class="buttons">
             <button class="clear" onclick="clearDisplay()">C</button>
+            <button class="btn" onclick="toggleSign()">+/-</button>
             <button class="operator" onclick="appendToDisplay('/')">/</button>
             <button class="operator" onclick="appendToDisplay('*')">×</button>
             <button class="operator" onclick="deleteLast()">⌫</button>
@@ -133,6 +134,16 @@
     </div>
 
     <script>
+        function toggleSign() {
+  if (currentInput === '' || currentInput === '0') return;
+  
+  if (currentInput.startsWith('-')) {
+    currentInput = currentInput.slice(1);
+  } else {
+    currentInput = '-' + currentInput;
+  }
+  updateDisplay();
+}
         let display = document.getElementById('display');
         let history = document.getElementById('history');
         let currentInput = '';
