@@ -142,18 +142,24 @@
   } else {
     currentInput = '-' + currentInput;
   }
-  updateDisplay();
-}
-        let display = document.getElementById('display');
-        let history = document.getElementById('history');
-        let currentInput = '';
-        let historyLines = [];
-
-        window.onload = function() {
-            const savedHistory = localStorage.getItem('calcHistoryArray');
-            if (savedHistory) {
+ document.getElementById('display').textContent = currentInput;       }                    
+let currentInput = '0';
+let historyLines = [];
+        window.onload = function() 
+  const savedHistory = localStorage.getItem('calcHistory');          if (savedHistory) {
                 historyLines = JSON.parse(savedHistory);
                 updateHistoryDisplay();
+            window.onload = function() {
+  history = document.getElementById('history');
+  
+  const savedHistory = localStorage.getItem('calcHistory');
+  if (savedHistory) {
+    historyLines = JSON.parse(savedHistory);
+  }
+  
+  document.getElementById('display').textContent = '0';
+  updateHistoryDisplay();
+}
             }
         }
 
