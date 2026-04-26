@@ -211,18 +211,17 @@
                 if (result !== undefined) {
                     let historyEntry = `${currentInput} = ${result}`;
                     historyLines.push(historyEntry);
-                    if (historyLines.length > 5) historyLines.shift();
-                    
-                    localStorage.setItem('calcHistoryArray', JSON.stringify(historyLines));
-                    updateHistoryDisplay();
-                    
-                    display.value = result;
-                    currentInput = result.toString();
-                }
-            } catch (error) {
-                display.value = 'Error';
-                currentInput = '';
-            }
+                    if (historyLines.length > 5) {
+  historyLines.shift();
+}                 localStorage.setItem('calcHistoryArray', JSON.stringify(historyLines));
+                    updateHistoryDisplay();         
+document.getElementById('display').textContent = result;
+currentInput = result.toString();
+    }
+  } catch (error) {
+    document.getElementById('display').textContent = 'Error';
+    currentInput = '';
+  }            }
         }
 
         function clearHistory() {
